@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <form class="form" name="todoForm">                    
                     <div class="form-group">
                         <label>Todo</label>
-                        <input type="text" class="form-control" name="todo" ng-model="tempTodoData.todo"/>
+                        <input type="text" class="form-control" name="todo" ng-model="tempTodoData.todo" ng-required="required" />
                     </div>
                     <div class="form-group">
                         <label>Description</label>
@@ -36,9 +36,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   					<span class="add-on"><i class="icon-th"></i></span>
 					</div>
                     </div>                    
-                    <a href="javascript:void(0);" class="btn btn-warning" onClick="$('.formData').slideUp();">Cancel</a>
-			<a href="javascript:void(0);" class="btn btn-success" ng-hide="ok" ng-click="addTask()">Add Task</a>
-                    <a href="javascript:void(0);" class="btn btn-success" ng-hide="!tempTodoData" ng-click="updateTask()">Update Task</a>
+                    <a href="javascript:void(0);" ng-click="removeTemp()" class="btn btn-warning" onClick="$('.formData').slideUp();">Cancel</a>
+			<a href="javascript:void(0);" class="btn btn-success" ng-hide="tempTodoData.id" ng-click="addTask()">Add Task</a>
+                    <a href="javascript:void(0);" class="btn btn-success" ng-hide="!tempTodoData.id" ng-click="updateTask()">Update Task</a>
                 </form>
             </div>
 <div class="col col-md-6">
@@ -98,6 +98,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         		$scope.saveTask('add');
         		  $('.formData').slideDown();
     		};
+    		$scope.removeTemp = function(){
+        		$scope.tempTodoData={}
+    		};
    
     		$scope.editTask = function(task){
         		$scope.tempTodoData = {            		
@@ -119,7 +122,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             			'type':type
         			});        			
         			$http.post("add_task", data).success(function(response){        				
-            			if(response > 0){	            				
+            			if(response !=500 && response > 0){	            				
                 			if(type == 'edit'){                    			                     			 
                     			$scope.tasks[$scope.index].title = $scope.tempTodoData.title;
              			         $scope.tasks[$scope.index].description = $scope.tempTodoData.description;
@@ -133,13 +136,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         			status:0
                     			});                    
                     			$scope.messageSuccess('Task Created Successfully!!');
-            			    }            			    
+            			    }            		            			   
                 			$scope.todoForm.$setPristine();
                 			$scope.tempTodoData = {};
                 			$('.formData').slideUp();                			
             			}
             			else {
-                			$scope.messageError('Something Went Wrong Try Later.');
+                			 	$scope.messageError('Please Enter Details.');	
             			}
         			});
     			};   

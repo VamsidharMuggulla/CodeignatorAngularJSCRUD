@@ -15,10 +15,8 @@ class Todo extends CI_Controller
     {
         $this->load->helper('url');
         $res      = $this->db->get('todo')->result();
-        // $res = $this->db->get_where('todo',array('status'=>1));	
-        // $res = $this->db->where('todo',array('status'=>1));
         $data_arr = array();
-        $i        = 0;
+        $i = 0;
         foreach ($res as $r) {
             $data_arr[$i]['id']          = $r->id;
             $data_arr[$i]['todo']        = $r->todo;
@@ -52,7 +50,7 @@ class Todo extends CI_Controller
         $todo        = $data['todo'];
         $description = $data['description'];
         $date        = date('Y-m-d', strtotime($data['date']));
-        if ($type == 'add') {
+        if ($type == 'add' && $todo && $description && $date) {
             $dataa = array(
                 'status' => 0,
                 'todo' => $todo,
@@ -65,7 +63,7 @@ class Todo extends CI_Controller
             } else {
                 echo $res;
             }
-        } else if ($type == 'edit') {
+        } else if ($type == 'edit' && $todo && $description && $date) {
             $id    = $data['id'];
             $dataa = array(
                 'todo' => $todo,
@@ -82,6 +80,9 @@ class Todo extends CI_Controller
                 'id' => $id
             ));
             echo $res == 'true' ? 1 : 0;
+        }
+        else {
+        	echo 500;
         }
     }
 }
